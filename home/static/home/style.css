@@ -2,3 +2,8 @@ body {
     font-family: Arial;
     padding-top: 50px;
 }
+
+
+legend {
+    padding-top: 20px;
+}

@@ -1,0 +1,19 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+<table>
+    {% for blog_post in blogs %}
+    <tr>
+       
+        <td>{{ blog_post.title }}</td>
+         <td>
+      
+    </tr>
+    {% empty %}
+    <p>You have no blogs.</p>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
