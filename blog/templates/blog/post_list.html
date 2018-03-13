@@ -1,0 +1,31 @@
+{% extends 'home/base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+<hr>
+<table>
+    <tr class="blog_title">
+        <td><a href="{% url 'new_post' %}" class="btn btn-danger btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i>New post</a></td>
+    </tr>
+</table>
+<hr>
+<table>
+    {% for blog in blogs %}
+    <tr class="blog_title">
+       
+        <td><h2>{{ blog.title }}</h2></td>
+    </tr>
+    <tr>
+        <td><div>{{ blog.content }}</div></td>
+      
+    </tr>
+    <tr>
+        
+        <td><br><a href="{% url 'post_detail' blog.id %}" class="btn btn-success btn-sm btn-block" role="button"><i class="glyphicon glyphicon-resize-full"></i>Read More</a></td>
+    </tr>
+    {% empty %}
+    <p>You have no blogs.</p>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

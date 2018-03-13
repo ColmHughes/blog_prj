@@ -1,0 +1,36 @@
+{% extends 'home/base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+
+
+
+<table>
+    <tr class="blog_title">
+       
+        <td><h2>{{ post.title }}</h2></td>
+    </tr>
+    <tr>
+        <td><br><div>{{ post.content }}</div></td>
+    </tr>
+    <tr>
+        <td><br><div>{{ post.tag }}</div></td>
+    </tr>
+    <tr>
+        <td><br><div>Number of views: {{ post.views }}</div></td>
+    </tr>
+    <tr>
+        <td><br><div>Author: {{ post.author }}</div></td>
+    </tr>
+    <tr>
+        <td><br><a href="{% url 'edit_post' post.id %}" class="btn btn-warning btn-sm btn-block" role="button"><i class="glyphicon glyphicon-edit"></i>Edit</a></td>
+    </tr>
+    <tr>
+        <td><br><a href="{% url 'post_list' %}" class="btn btn-success btn-sm btn-block" role="button"><i class="glyphicon glyphicon-resize-small"></i>Return</a></td>
+    </tr>
+</table>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+
+
