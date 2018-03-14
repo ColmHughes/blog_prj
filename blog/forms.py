@@ -1,12 +1,12 @@
 from django import forms
 from .models import Post
 
-class NewPostForm(forms.ModelForm):
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'content', 'tag')
+        fields = ('title', 'content', 'image', 'tag')
         
 class EditPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'content', 'tag')
+        fields = ('title', 'content', 'image', 'tag')

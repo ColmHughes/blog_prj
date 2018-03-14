@@ -1,31 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
-from .forms import NewPostForm, EditPostForm
+from .forms import PostForm, EditPostForm
 
 # Create your views here.
 def blog_home(request):
     return render(request, 'blog/index.html')
     
 def post_list(request):
-    blogs = Post.objects.all()
-    return render(request, 'blog/post_list.html', {'blogs': blogs})
+    posts = Post.objects.all().order_by('-id')
+    # Reserved.objects.all().filter(client=client_id).order_by('created_date')
+    return render(request, 'blog/post_list.html', {'posts': posts})
     
 def post_detail(request, id):
     post=get_object_or_404(Post, pk=id)
-    post.read=True
-    post.save
     return render(request, 'blog/post_detail.html', {'post': post})
 
     
-def new_post(request):
+def create_post(request):
     if request.method=="POST":
-        form = NewPostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         message = form.save(commit=False)
         message.author = request.user
         message.save()
         return redirect('post_list')
     else:
-        form = NewPostForm()
+        form = PostForm()
     
     return render(request, "blog/new_post.html", { 'form': form })
     
@@ -35,14 +34,21 @@ def new_post(request):
     
 def edit_post(request, id):
     item = get_object_or_404(Post, pk=id)
-    if request.method == "POST":
-        print("It's a post")
-        form = EditPostForm(request.POST, instance=item)
-        if form.is_valid():
-            form.save()
-            return redirect("post_list")
-    else:
-        print("It's a get")
+    if item.author == request.user:
+        if request.method == "POST":
+            print("It's a post")
+            form = EditPostForm(request.POST, request.FILES,instance=item)
+            if form.is_valid():
+                form.save()
+                return redirect("post_list")
+        else:
+            print("It's a get")
+        
+        form = EditPostForm(instance=item)
+        return render(request, 'blog/edit_post.html', {'form': form})
+    return redirect("home")
     
-    form = EditPostForm(instance=item)
-    return render(request, 'blog/edit_post.html', {'form': form})
+def delete_post(request, id):
+    item = get_object_or_404(Post, pk=id)
+    item.delete()
+    return redirect("post_list")
