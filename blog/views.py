@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm, EditPostForm
+from django.utils import timezone
 
 # Create your views here.
 def blog_home(request):
@@ -8,11 +9,14 @@ def blog_home(request):
     
 def post_list(request):
     posts = Post.objects.all().order_by('-id')
-    # Reserved.objects.all().filter(client=client_id).order_by('created_date')
+    posts = Post.objects.filter(published_date__lte=timezone.now()
+                               ).order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
     
 def post_detail(request, id):
     post=get_object_or_404(Post, pk=id)
+    post.views += 1
+    post.save()
     return render(request, 'blog/post_detail.html', {'post': post})
 
     
