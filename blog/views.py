@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm, EditPostForm
 from django.utils import timezone
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 def blog_home(request):
@@ -38,19 +39,21 @@ def create_post(request):
     
 def edit_post(request, id):
     item = get_object_or_404(Post, pk=id)
-    if item.author == request.user:
-        if request.method == "POST":
-            print("It's a post")
-            form = EditPostForm(request.POST, request.FILES,instance=item)
-            if form.is_valid():
-                form.save()
-                return redirect("post_list")
-        else:
-            print("It's a get")
-        
-        form = EditPostForm(instance=item)
-        return render(request, 'blog/edit_post.html', {'form': form})
-    return redirect("home")
+    
+    if item.author != request.user or request.user.is_staff:
+        return HttpResponseForbidden()
+    if request.method == "POST":
+        print("It's a post")
+        form = EditPostForm(request.POST, request.FILES,instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("post_list")
+    else:
+        print("It's a get")
+    
+    form = EditPostForm(instance=item)
+    return render(request, 'blog/edit_post.html', {'form': form})
+    
     
 def delete_post(request, id):
     item = get_object_or_404(Post, pk=id)
